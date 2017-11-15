@@ -39,8 +39,7 @@ function reApk() {
 }
 
 function uploadApk() {
-   adb push $dest_path/m3.apk /sdcard/Android/data/com.mx.browser.star/cache/filemanager.apk
-#   adb push $dest_path/m3.apk /sdcard/Android/data/com.mx.browser.star/cache/$1.apk
+   adb push $dest_path/m3.apk /sdcard/Android/data/$2/cache/$1.apk
 }
 
 function main() {
@@ -53,7 +52,7 @@ function main() {
    unApk $dest_path/${module_name}-debug.apk
    rmV4
    reApk
-   uploadApk $module_path
+   uploadApk $module_path $2
 }
 
 function handleApk() {
@@ -72,13 +71,13 @@ function handleApk() {
 }
 
 
-help="$0  -m filemanager -s /tmp/a.apk -d /tmp/b.apk"
+help="$0  -m filemanager -p com.xx.xxx -s /tmp/a.apk -d /tmp/b.apk"
 if [ $# == 0 ]; then
     echo $help
     exit
 fi
 
-while getopts "m:hs:d:" arg #选项后面的冒号表示该选项需要参数
+while getopts "m:hs:d:p:" arg #选项后面的冒号表示该选项需要参数
 do
         case $arg in
              m)
@@ -90,6 +89,10 @@ do
              d)
                dest_apk=$OPTARG
                ;;
+             p)
+               package_name=$OPTARG
+               ;;
+
              h)
                 echo $help
                 exit 1
@@ -106,7 +109,7 @@ echo $dest_apk
 
 if [ ! -z $module_name ]; then
   echo "hello world"
-  main $module_name
+  main $module_name $package_name
 fi
 
 if [ ! -z $src_apk ]; then
